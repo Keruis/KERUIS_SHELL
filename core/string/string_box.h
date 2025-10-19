@@ -34,21 +34,20 @@ struct string_box {
 
         void setCapacity(std::size_t cap, category::Category cat) KS_NOEXCEPT {
             capacity_ = (cap & capacity_mask)
-            | ((cat == category::Category::isLarge) ? category_mask : 0);
+            | ((cat == category::Category::isMedium) ? category_mask : 0);
         }
     };
 
     constexpr static std::size_t medium_large_size = sizeof(MediumLarge);
 
     union {
-        uint8_t bytes_[medium_large_size];
         MediumLarge as_ml;
         char_t as_small[medium_large_size/type_size];
     };
 
-    category::Category category() KS_CONST KS_NOEXCEPT {
+    KS_NODISCARD category::Category category() KS_CONST KS_NOEXCEPT {
         return (as_ml.capacity_ & category_mask)
-            ? category::Category::isLarge
+            ? category::Category::isMedium
             : category::Category::isSmall;
     }
 

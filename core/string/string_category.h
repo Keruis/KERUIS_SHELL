@@ -9,7 +9,7 @@ using category_t = std::uint8_t;
 
 enum class Category : category_t {
     isSmall = 0,
-    isLarge = 1,
+    isMedium = 1,
 };
 
 }
