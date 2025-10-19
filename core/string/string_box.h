@@ -38,11 +38,11 @@ struct string_box {
         }
     };
 
-    constexpr static std::size_t medium_large_size = sizeof(MediumLarge);
+    constexpr static std::size_t medium_large_size = sizeof(MediumLarge) / type_size;
 
     union {
         MediumLarge as_ml;
-        char_t as_small[medium_large_size/type_size];
+        char_t as_small[medium_large_size];
     };
 
     KS_NODISCARD category::Category category() KS_CONST KS_NOEXCEPT {
