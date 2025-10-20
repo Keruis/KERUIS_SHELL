@@ -10,7 +10,7 @@ namespace ks::core::utils::attributes {
 #elif defined(_MSC_VER)
 #define KS_ALWAYS_INLINE __forceinline
 #define KS_PURE
-#define KS_CONST
+#define KS_CONST const
 #else
 #define KS_ALWAYS_INLINE inline
 #define KS_PURE

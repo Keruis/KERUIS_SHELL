@@ -3,6 +3,7 @@
 
 int main() {
     ksstd::string a("aaaaaaaa");
-    std::cout << a.size() <<std::endl;
+    ksstd::string b("qwertyuiopasdfghjklzxcvbnm");
+    std::cout << b.size() <<std::endl;
     return 0;
 }
