@@ -22,11 +22,66 @@ public:
     using const_pointer_t   = typename string_trait::const_pointer_t;
     using Alloc_t           = Alloc_;
 
+    constexpr static std::size_t npos = static_cast<std::size_t>(-1);
+
 protected:
     using box_t             = box::string_box<string_trait>;
     using box_t::as_ml;
     using box_t::as_small;
     using box_t::type_size;
+
+public:
+    KS_CONSTEXPR string_core& operator=(const string_core&  rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator=(string_core&&       rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator=(const_pointer_t     data) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator+(const string_core& lhs, const string_core& rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator+(const string_core& lhs, const_pointer_t    rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator+(const_pointer_t    lhs, const string_core& rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator+(const string_core& lhs, char_t             rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator+(char_t             lhs, const string_core& rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator-(const string_core& lhs, const string_core& rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator-(const string_core& lhs, const_pointer_t    rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator-(const_pointer_t    lhs, const string_core& rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator-(const string_core& lhs, char_t             rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator-(char_t             lhs, const string_core& rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator*(const string_core& lhs, std::size_t        rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator*(std::size_t        lhs, const string_core& rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator/(const string_core& lhs, std::size_t        rhs) KS_NOEXCEPT;
+    friend KS_CONSTEXPR string_core operator/(std::size_t        lhs, const string_core& rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator+=(const string_core& rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator+=(const_pointer_t    rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator+=(char_t             rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator-=(const string_core& rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator-=(const_pointer_t    rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator-=(char_t             rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator*=(std::size_t        rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator/=(std::size_t        rhs) KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator==(const string_core& rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator!=(const string_core& rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator< (const string_core& rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator<=(const string_core& rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator> (const string_core& rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator>=(const string_core& rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator==(const_pointer_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator!=(const_pointer_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator< (const_pointer_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator<=(const_pointer_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator> (const_pointer_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator>=(const_pointer_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator==(char_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator!=(char_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator< (char_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator<=(char_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator> (char_t rhs) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR bool operator>=(char_t rhs) KS_CONST KS_NOEXCEPT;
+    friend std::basic_ostream<char_t>& operator<<(std::basic_ostream<char_t>& os, const string_core& rhs) KS_NOEXCEPT;
+    friend std::basic_ostream<char_t>& operator>>(std::basic_istream<char_t>& is, string_core&       rhs) KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR char_t&       operator[](std::size_t index) KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR const_char_t& operator[](std::size_t index) KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD operator const_pointer_t() KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD explicit operator bool() KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD explicit operator std::string() KS_CONST KS_NOEXCEPT;
+    KS_NODISCARD explicit operator std::string_view() KS_CONST KS_NOEXCEPT;
 
 private:
     constexpr static std::size_t last_char = sizeof(as_ml) - 1;
@@ -34,8 +89,10 @@ private:
 
 public:
     KS_CONSTEXPR string_core() KS_NOEXCEPT;
+    KS_CONSTEXPR ~string_core() KS_NOEXCEPT;
+    KS_CONSTEXPR string_core(string_core&& rhs) KS_NOEXCEPT;
     KS_CONSTEXPR string_core(const string_core& rhs) KS_NOEXCEPT;
-    KS_CONSTEXPR string_core(const_pointer_t data) KS_NOEXCEPT;
+    KS_CONSTEXPR explicit string_core(const_pointer_t data) KS_NOEXCEPT;
 
 private:
     KS_CONSTEXPR void reset() KS_NOEXCEPT;
@@ -45,17 +102,48 @@ private:
     void initMedium(const_pointer_t data, std::size_t size);
     void copySmall(const string_core& rhs);
     void copyMedium(const string_core& rhs);
+    void reserveSmall(std::size_t size);
+    void reserveMedium(std::size_t size);
 
 public:
     KS_NODISCARD KS_CONSTEXPR std::size_t size() KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR std::size_t capacity() KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR pointer_t data() KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR const_pointer_t data() KS_CONST KS_NOEXCEPT;
     KS_NODISCARD KS_CONSTEXPR pointer_t c_str() KS_NOEXCEPT;
     KS_NODISCARD KS_CONSTEXPR const_pointer_t c_str() KS_CONST KS_NOEXCEPT;
 };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR string_core<StringTrait_, Alloc_>::string_core() KS_NOEXCEPT {
     reset();
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR string_core<StringTrait_, Alloc_>::~string_core() KS_NOEXCEPT {
+    if (isSmall()) {
+        return;
+    }
+
+    Alloc_t::deallocate(as_ml.data_, as_ml.capacity_);
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR string_core<StringTrait_, Alloc_>::string_core(string_core&& rhs) KS_NOEXCEPT {
+
 }
 
 template <typename StringTrait_, typename Alloc_>
@@ -104,14 +192,12 @@ void string_core<StringTrait_, Alloc_>::setSmallSize(std::size_t s) {
 
 template <typename StringTrait_, typename Alloc_>
 void string_core<StringTrait_, Alloc_>::initSmall(const_pointer_t data, std::size_t size) {
-    //std::cout << "1" <<std::endl;
     setSmallSize(size);
     string_trait::copy(as_small, data, size);
 }
 
 template <typename StringTrait_, typename Alloc_>
 void string_core<StringTrait_, Alloc_>::initMedium(const_pointer_t data, std::size_t size) {
-    //std::cout << "2" <<std::endl;
     as_ml.data_ = Alloc_t::allocate(size + 1);
     string_trait::copy(as_ml.data_, data, size);
     as_ml.data_[size] = '\0';
@@ -126,10 +212,33 @@ void string_core<StringTrait_, Alloc_>::copySmall(const string_core& rhs) {
 
 template <typename StringTrait_, typename Alloc_>
 void string_core<StringTrait_, Alloc_>::copyMedium(const string_core& rhs) {
-    as_ml.data_ = Alloc_t::allocate((rhs.as_ml.size_ + 1) * type_size);
+    as_ml.data_ = Alloc_t::allocate(rhs.as_ml.size_ + 1);
     string_trait::copy(as_ml.data_, rhs.as_ml.data_, rhs.as_ml.size_ + 1);
     as_ml.size_ = rhs.as_ml.size_;
     as_ml.setCapacity((rhs.as_ml.size_ + 1) / type_size - 1, category::Category::isMedium);
+}
+
+template <typename StringTrait_, typename Alloc_>
+void string_core<StringTrait_, Alloc_>::reserveSmall(std::size_t size) {
+    if (size <= max_small_size) {
+        return;
+    }
+
+    pointer_t mallocPtr = Alloc_t::allocate(size + 1);
+    string_trait::copy(mallocPtr, as_small, static_cast<std::size_t>(as_small[max_small_size]) + 1);
+    as_ml.data_ = mallocPtr;
+    as_ml.setCapacity(size + 1, category::Category::isMedium);
+}
+
+template <typename StringTrait_, typename Alloc_>
+void string_core<StringTrait_, Alloc_>::reserveMedium(std::size_t size) {
+    if (size <= as_ml.capacity_) {
+        return;
+    }
+    pointer_t mallocPtr = Alloc_t::allocate(size + 1);
+    string_trait::copy(mallocPtr, as_ml.data_, size + 1);
+    as_ml.data_ = mallocPtr;
+    as_ml.setCapacity(size + 1, category::Category::isMedium);
 }
 
 
@@ -140,6 +249,25 @@ KS_NODISCARD KS_CONSTEXPR std::size_t string_core<StringTrait_, Alloc_>::size() 
     }
     return as_ml.size_;
 }
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR std::size_t string_core<StringTrait_, Alloc_>::capacity() KS_NOEXCEPT {
+    if (isSmall()) {
+        return max_small_size;
+    }
+    return as_ml.capacity_;
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR typename string_core<StringTrait_, Alloc_>::pointer_t string_core<StringTrait_, Alloc_>::data() KS_NOEXCEPT {
+    return as_ml.data_;
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR typename string_core<StringTrait_, Alloc_>::const_pointer_t string_core<StringTrait_, Alloc_>::data() KS_CONST KS_NOEXCEPT {
+    return as_ml.data_;
+}
+
 
 template <typename StringTrait_, typename Alloc_>
 KS_NODISCARD KS_CONSTEXPR typename string_core<StringTrait_, Alloc_>::pointer_t string_core<StringTrait_, Alloc_>::c_str() KS_NOEXCEPT {
