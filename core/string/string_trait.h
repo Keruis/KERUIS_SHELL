@@ -2,7 +2,7 @@
 #define STRING_TRAIT_H
 
 #include "../utils/type_traits.h"
-#include "character_type.h"
+#include "types/character_type.h"
 
 #include <cstring>
 #include <cwchar>
@@ -44,6 +44,19 @@ struct string_trait {
         for (std::size_t i = 0; i < count; ++i)
             dest[i] = ch;
     }
+
+    template <class = void>
+    static constexpr bool compare(char_t ch1, char_t ch2) noexcept {
+        return ch1 == ch2;
+    }
+
+    template <class = void>
+    static constexpr bool compare(const_pointer_t str1, const_pointer_t str2, std::size_t count) noexcept {
+        for (std::size_t i = 0; i < count; ++i)
+            if (str1[i] != str2[i])
+                return false;
+        return true;
+    }
 };
 
 template <>
@@ -72,6 +85,19 @@ struct string_trait<char> {
     static constexpr void assign(pointer_t dest, std::size_t count, char_t ch) noexcept {
         std::memset(dest, ch, count);
     }
+
+    template <class = void>
+    static constexpr bool compare(char_t ch1, char_t ch2) noexcept {
+        return ch1 == ch2;
+    }
+
+    template <class = void>
+    static constexpr bool compare(const_pointer_t str1, const_pointer_t str2, std::size_t count) noexcept {
+        for (std::size_t i = 0; i < count; ++i)
+            if (str1[i] != str2[i])
+                return false;
+        return true;
+    }
 };
 
 template <>
@@ -99,6 +125,19 @@ struct string_trait<wchar_t> {
     template <class = void>
     static constexpr void assign(pointer_t dest, std::size_t count, char_t ch) noexcept {
         std::wmemset(dest, ch, count);
+    }
+
+    template <class = void>
+    static constexpr bool compare(char_t ch1, char_t ch2) noexcept {
+        return ch1 == ch2;
+    }
+
+    template <class = void>
+    static constexpr bool compare(const_pointer_t str1, const_pointer_t str2, std::size_t count) noexcept {
+        for (std::size_t i = 0; i < count; ++i)
+            if (str1[i] != str2[i])
+                return false;
+        return true;
     }
 };
 
@@ -130,6 +169,19 @@ struct string_trait<char8_t> {
     static constexpr void assign(pointer_t dest, std::size_t count, char_t ch) noexcept {
         for (std::size_t i = 0; i < count; ++i)
             dest[i] = ch;
+    }
+
+    template <class = void>
+    static constexpr bool compare(char_t ch1, char_t ch2) noexcept {
+        return ch1 == ch2;
+    }
+
+    template <class = void>
+    static constexpr bool compare(const_pointer_t str1, const_pointer_t str2, std::size_t count) noexcept {
+        for (std::size_t i = 0; i < count; ++i)
+            if (str1[i] != str2[i])
+                return false;
+        return true;
     }
 };
 
@@ -163,6 +215,19 @@ struct string_trait<char16_t> {
         for (std::size_t i = 0; i < count; ++i)
             dest[i] = ch;
     }
+
+    template <class = void>
+    static constexpr bool compare(char_t ch1, char_t ch2) noexcept {
+        return ch1 == ch2;
+    }
+
+    template <class = void>
+    static constexpr bool compare(const_pointer_t str1, const_pointer_t str2, std::size_t count) noexcept {
+        for (std::size_t i = 0; i < count; ++i)
+            if (str1[i] != str2[i])
+                return false;
+        return true;
+    }
 };
 
 template <>
@@ -194,6 +259,19 @@ struct string_trait<char32_t> {
     static constexpr void assign(pointer_t dest, std::size_t count, char_t ch) noexcept {
         for (std::size_t i = 0; i < count; ++i)
             dest[i] = ch;
+    }
+
+    template <class = void>
+    static constexpr bool compare(char_t ch1, char_t ch2) noexcept {
+        return ch1 == ch2;
+    }
+
+    template <class = void>
+    static constexpr bool compare(const_pointer_t str1, const_pointer_t str2, std::size_t count) noexcept {
+        for (std::size_t i = 0; i < count; ++i)
+            if (str1[i] != str2[i])
+                return false;
+        return true;
     }
 };
 

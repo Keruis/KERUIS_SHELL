@@ -14,7 +14,27 @@ public:
     using string_trait = StringTrait;
     using core_t::core_t;
 
+    template <typename... ArgsTy>
+    KS_CONSTEXPR basic_string operator+(ArgsTy&&... args)
+        noexcept requires (
+            requires {
+                basic_string { *this, std::forward<ArgsTy>(args)... };
+            }
+        )
+    {
+        return { *this, std::forward<ArgsTy>(args)... };
+    }
 
+    template <typename... ArgsTy>
+    KS_CONSTEXPR bool operator==(ArgsTy&&... args)
+        KS_NOEXCEPT requires (
+            requires {
+                core_t::compare(std::forward<ArgsTy>(args)...);
+            }
+        )
+    {
+        return core_t::compare(std::forward<ArgsTy>(args)...);
+    }
 
 };
 

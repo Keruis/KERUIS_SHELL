@@ -4,6 +4,7 @@
 #include "string.h"
 #include "../types/tags.h"
 #include "../utils/left_ptr_macro.h"
+#include "../detail/numeric_conversion.h"
 
 namespace ks::core::string::type_conversion {
         #define KSTD_STRING_TYPES(_) \
@@ -15,11 +16,11 @@ namespace ks::core::string::type_conversion {
 
     template <typename CharT>
     inline int string_to_int(const CharT* s) {
-        if constexpr (std::is_same_v<CharT, char>) return std::stoi(s);
-        else if constexpr (std::is_same_v<CharT, wchar_t>) return std::stoi(s);
-        else if constexpr (std::is_same_v<CharT, char8_t>) return std::stoi(reinterpret_cast<const char*>(s));
-        else if constexpr (std::is_same_v<CharT, char16_t>) return std::stoi(std::wstring(s, s + std::char_traits<char16_t>::length(s)));
-        else if constexpr (std::is_same_v<CharT, char32_t>) return std::stoi(std::wstring(s, s + std::char_traits<char32_t>::length(s)));
+        if constexpr (std::is_same_v<CharT, char>) return detail::string::StringConverter<CharT>::to_int(ksstd::string(s));
+        else if constexpr (std::is_same_v<CharT, wchar_t>) return detail::string::StringConverter<CharT>::to_int(ksstd::wstring(s));
+        else if constexpr (std::is_same_v<CharT, char8_t>) return detail::string::StringConverter<CharT>::to_int(ksstd::u8string(s));
+        else if constexpr (std::is_same_v<CharT, char16_t>) return detail::string::StringConverter<CharT>::to_int(ksstd::u16string(s));
+        else if constexpr (std::is_same_v<CharT, char32_t>) return detail::string::StringConverter<CharT>::to_int(ksstd::u32string(s));
         else static_assert(sizeof(CharT) == 0, "Unsupported char type");
     }
 
@@ -45,26 +46,26 @@ namespace ks::core::string::type_conversion {
 
     template <typename CharT>
     inline bool string_to_bool(const CharT* s) {
-
+        return false;
     }
 
 
-    #define DEFINE_STRING_OPS(STR_ALIAS, CHAR_T)                               \
-    inline ksstd::STR_ALIAS &operator-(ksstd::STR_ALIAS &self) noexcept {        \
-    return self;                                                           \
-    }                                                                           \
-    inline int operator<(types::tags::Int, ksstd::STR_ALIAS &self) noexcept {                 \
-        return string_to_int<CHAR_T>(self.c_str());                             \
-    }                                                                           \
-    inline float operator<(types::tags::Float, ksstd::STR_ALIAS &self) noexcept {             \
-        return string_to_float<CHAR_T>(self.c_str());                           \
-    }                                                                           \
-    inline double operator<(types::tags::Double, ksstd::STR_ALIAS &self) noexcept {           \
-        return string_to_double<CHAR_T>(self.c_str());                          \
-    }                                                                           \
-    inline bool operator<(types::tags::Bool, ksstd::STR_ALIAS &self) noexcept {               \
-        return string_to_bool<CHAR_T>(self.c_str());                            \
-    }
+    #define DEFINE_STRING_OPS(STR_ALIAS, CHAR_T)                                        \
+        inline ksstd::STR_ALIAS &operator-(ksstd::STR_ALIAS &self) noexcept {           \
+            return self;                                                                \
+        }                                                                               \
+        inline int operator<(types::tags::Int, ksstd::STR_ALIAS &self) noexcept {       \
+            return string_to_int<CHAR_T>(self.c_str());                                 \
+        }                                                                               \
+        inline float operator<(types::tags::Float, ksstd::STR_ALIAS &self) noexcept {   \
+            return string_to_float<CHAR_T>(self.c_str());                               \
+        }                                                                               \
+        inline double operator<(types::tags::Double, ksstd::STR_ALIAS &self) noexcept { \
+            return string_to_double<CHAR_T>(self.c_str());                              \
+        }                                                                               \
+        inline bool operator<(types::tags::Bool, ksstd::STR_ALIAS &self) noexcept {     \
+            return string_to_bool<CHAR_T>(self.c_str());                                \
+        }
 
     KSTD_STRING_TYPES(DEFINE_STRING_OPS)
 
