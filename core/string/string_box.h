@@ -45,6 +45,9 @@ struct string_box {
         char_t as_small[medium_large_size];
     };
 
+    using box_value_t = MediumLarge;
+    using box_buffer_t = decltype(as_small);
+
     KS_NODISCARD category::Category category() KS_CONST KS_NOEXCEPT {
         return (as_ml.capacity_ & category_mask)
             ? category::Category::isMedium

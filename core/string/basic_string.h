@@ -26,6 +26,18 @@ public:
     }
 
     template <typename... ArgsTy>
+    KS_CONSTEXPR basic_string& operator=(ArgsTy&&... args)
+        noexcept requires (
+            requires {
+                core_t::assignment(std::forward<ArgsTy>(args)...);
+            }
+        )
+    {
+        core_t::assignment(std::forward<ArgsTy>(args)...);
+        return *this;
+    }
+
+    template <typename... ArgsTy>
     KS_CONSTEXPR bool operator==(ArgsTy&&... args)
         KS_NOEXCEPT requires (
             requires {
