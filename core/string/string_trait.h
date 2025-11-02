@@ -15,10 +15,12 @@ concept character_type = type::is_char_type_v<Ty_>;
 
 template <character_type Ty_>
 struct string_trait {
-    using char_t          = Ty_;
-    using const_char_t    = const Ty_;
-    using pointer_t       = char_t*;
-    using const_pointer_t = const_char_t*;
+    using char_t            = Ty_;
+    using const_char_t      = const Ty_;
+    using reference_t       = Ty_&;
+    using const_reference_t = const reference_t;
+    using pointer_t         = char_t*;
+    using const_pointer_t   = const_char_t*;
 
     constexpr static std::size_t type_size      = sizeof(char_t);
     constexpr static std::size_t category_shift = 1;
@@ -61,10 +63,12 @@ struct string_trait {
 
 template <>
 struct string_trait<char> {
-    using char_t          = char;
-    using const_char_t    = const char;
-    using pointer_t       = char*;
-    using const_pointer_t = const char*;
+    using char_t            = char;
+    using const_char_t      = const char;
+    using reference_t       = char&;
+    using const_reference_t = const char&;
+    using pointer_t         = char*;
+    using const_pointer_t   = const char*;
 
     constexpr static std::size_t type_size      = sizeof(char);
     constexpr static std::size_t category_shift = 1;
@@ -102,10 +106,12 @@ struct string_trait<char> {
 
 template <>
 struct string_trait<wchar_t> {
-    using char_t          = wchar_t;
-    using const_char_t    = const wchar_t;
-    using pointer_t       = wchar_t*;
-    using const_pointer_t = const wchar_t*;
+    using char_t            = wchar_t;
+    using const_char_t      = const wchar_t;
+    using reference_t       = wchar_t&;
+    using const_reference_t = const wchar_t&;
+    using pointer_t         = wchar_t*;
+    using const_pointer_t   = const wchar_t*;
 
     constexpr static std::size_t type_size      = sizeof(wchar_t);
     constexpr static std::size_t category_shift = 1;
@@ -143,10 +149,12 @@ struct string_trait<wchar_t> {
 
 template <>
 struct string_trait<char8_t> {
-    using char_t          = char8_t;
-    using const_char_t    = const char8_t;
-    using pointer_t       = char8_t*;
-    using const_pointer_t = const char8_t*;
+    using char_t            = char8_t;
+    using const_char_t      = const char8_t;
+    using reference_t       = char8_t&;
+    using const_reference_t = const char8_t;
+    using pointer_t         = char8_t*;
+    using const_pointer_t   = const char8_t*;
 
     constexpr static std::size_t type_size      = sizeof(char8_t);
     constexpr static std::size_t category_shift = 1;
@@ -187,10 +195,12 @@ struct string_trait<char8_t> {
 
 template <>
 struct string_trait<char16_t> {
-    using char_t          = char16_t;
-    using const_char_t    = const char16_t;
-    using pointer_t       = char16_t*;
-    using const_pointer_t = const char16_t*;
+    using char_t            = char16_t;
+    using const_char_t      = const char16_t;
+    using reference_t       = char16_t&;
+    using const_reference_t = const char16_t;
+    using pointer_t         = char16_t*;
+    using const_pointer_t   = const char16_t*;
 
     constexpr static std::size_t type_size      = sizeof(char16_t);
     constexpr static std::size_t category_shift = 1;
@@ -232,10 +242,12 @@ struct string_trait<char16_t> {
 
 template <>
 struct string_trait<char32_t> {
-    using char_t          = char32_t;
-    using const_char_t    = const char32_t;
-    using pointer_t       = char32_t*;
-    using const_pointer_t = const char32_t*;
+    using char_t            = char32_t;
+    using const_char_t      = const char32_t;
+    using reference_t       = char32_t&;
+    using const_reference_t = const char32_t;
+    using pointer_t         = char32_t*;
+    using const_pointer_t   = const char32_t*;
 
     constexpr static std::size_t type_size      = sizeof(char32_t);
     constexpr static std::size_t category_shift = 1;

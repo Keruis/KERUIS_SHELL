@@ -7,7 +7,6 @@ namespace ks::core::string::basic {
 
 template <typename StringTrait>
 class basic_string : public core::string_core<StringTrait> {
-    friend class core::string_core<StringTrait>;
     using core_t = core::string_core<StringTrait>;
 
 public:
@@ -23,6 +22,11 @@ public:
         )
     {
         return { *this, std::forward<ArgsTy>(args)... };
+    }
+
+    template <typename... ArgsTy>
+    KS_CONSTEXPR basic_string& operator+=(ArgsTy&&... args) KS_NOEXCEPT {
+        return this->append(std::forward<ArgsTy>(args)...);
     }
 
     template <typename... ArgsTy>
@@ -48,8 +52,22 @@ public:
         return core_t::compare(std::forward<ArgsTy>(args)...);
     }
 
-};
+    template <typename... Args>
+    KS_CONSTEXPR basic_string& append(Args&&... args) KS_NOEXCEPT {
+        (core_t::append(std::forward<Args>(args)), ...);
+        return *this;
+    }
 
+};
+    // if constexpr (sizeof...(Args) > 1) {
+    //     std::size_t added_size = (core_t::get_addend_length(args) + ... + 1);
+    //     this->reserve(this->size() + added_size);
+    //     std::cout << "f" << std::endl;
+    // } else
+    // {
+    //     std::cout << "size : " << (core_t::get_addend_length(args), ...) << std::endl;
+    //     std::cout << "" << std::endl;
+    // }
 }
 
 #endif //BASIC_STRING_H

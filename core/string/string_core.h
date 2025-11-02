@@ -18,11 +18,11 @@ public:
     using string_trait      = StringTrait_;
     using char_t            = typename string_trait::char_t;
     using const_char_t      = typename string_trait::const_char_t;
+    using reference_t       = typename string_trait::reference_t;
+    using const_reference_t = typename string_trait::const_reference_t;
     using pointer_t         = typename string_trait::pointer_t;
     using const_pointer_t   = typename string_trait::const_pointer_t;
     using Alloc_t           = Alloc_;
-
-    //constexpr static std::size_t nops = static_cast<std::size_t>(-1);
 
 protected:
     using box_t             = box::string_box<string_trait>;
@@ -46,11 +46,13 @@ public:
     KS_CONSTEXPR string_core(const string_core& lhs, char_t ch) KS_NOEXCEPT;
     KS_CONSTEXPR string_core(const string_core& lhs, const_pointer_t data) KS_NOEXCEPT;
     KS_CONSTEXPR string_core(const string_core& lhs, const string_core& rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator=(const string_core& rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& operator=(string_core&& rhs) KS_NOEXCEPT;
+    KS_CONSTEXPR reference_t operator[](std::size_t index) KS_NOEXCEPT;
+    KS_CONSTEXPR const_char_t operator[](std::size_t index) KS_CONST KS_NOEXCEPT;
 
 private:
     KS_CONSTEXPR void reset() KS_NOEXCEPT;
-    KS_NODISCARD KS_CONSTEXPR bool isSmall() KS_NOEXCEPT;
-    KS_NODISCARD KS_CONSTEXPR bool isSmall() KS_CONST KS_NOEXCEPT;
     void setSmallSize(std::size_t s);
     template <bool init_heap>
     KS_CONSTEXPR void respace(std::size_t size) KS_NOEXCEPT;
@@ -62,17 +64,14 @@ private:
     void copyMedium(const string_core& rhs);
     void reserveSmall(std::size_t size);
     void reserveMedium(std::size_t size);
-    void swapSmall(const string_core& rhs);
-    void swapMedium(const string_core& rhs);
+    void swapSmall(string_core& rhs);
+    void swapMedium(string_core& rhs);
     void clearSmall() KS_NOEXCEPT;
     void clearMedium() KS_NOEXCEPT;
     KS_CONSTEXPR bool compare(char_t ch) KS_NOEXCEPT;
     KS_CONSTEXPR bool compare(const_pointer_t str) KS_NOEXCEPT;
     KS_CONSTEXPR void appendSmall(const_pointer_t data, std::size_t size) KS_NOEXCEPT;
     KS_CONSTEXPR void appendMedium(const_pointer_t data, std::size_t size) KS_NOEXCEPT;
-    KS_CONSTEXPR string_core& append(char_t ch)                  KS_NOEXCEPT;
-    KS_CONSTEXPR string_core& append(const_pointer_t data)       KS_NOEXCEPT;
-    KS_CONSTEXPR string_core& append(const string_core& rhs)     KS_NOEXCEPT;
     KS_CONSTEXPR string_core& assignmentSmall(const_pointer_t data, std::size_t size) KS_NOEXCEPT;
     KS_CONSTEXPR string_core& assignmentMedium(const_pointer_t data, std::size_t size) KS_NOEXCEPT;
     KS_CONSTEXPR string_core& assignment(const_pointer_t data, std::size_t size) KS_NOEXCEPT;
@@ -80,6 +79,14 @@ private:
     KS_CONSTEXPR string_core& assignment(const_pointer_t data) KS_NOEXCEPT;
     KS_CONSTEXPR string_core& assignment(const string_core& rhs) KS_NOEXCEPT;
     KS_CONSTEXPR string_core& assignment(string_core&& rhs) KS_NOEXCEPT;
+
+protected:
+    KS_CONSTEXPR string_core& append(char_t ch)                  KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& append(const_pointer_t data)       KS_NOEXCEPT;
+    KS_CONSTEXPR string_core& append(const string_core& rhs)     KS_NOEXCEPT;
+    static KS_CONSTEXPR     std::size_t     get_addend_length(char_t) KS_NOEXCEPT;
+    static KS_CONSTEXPR     std::size_t     get_addend_length(const_pointer_t data) KS_NOEXCEPT;
+    static KS_CONSTEXPR     std::size_t     get_addend_length(const string_core& rhs) KS_NOEXCEPT;
 
 public:
     KS_NODISCARD KS_CONSTEXPR std::size_t       size()      KS_NOEXCEPT;
@@ -91,17 +98,19 @@ public:
     KS_NODISCARD KS_CONSTEXPR const_pointer_t   data()      KS_CONST KS_NOEXCEPT;
     KS_NODISCARD KS_CONSTEXPR pointer_t         c_str()     KS_NOEXCEPT;
     KS_NODISCARD KS_CONSTEXPR const_pointer_t   c_str()     KS_CONST KS_NOEXCEPT;
-    KS_CONSTEXPR              void              swap(const string_core& rhs)  KS_NOEXCEPT;
+    KS_CONSTEXPR              void              swap(string_core& rhs)  KS_NOEXCEPT;
     KS_NODISCARD KS_CONSTEXPR pointer_t         begin()     KS_NOEXCEPT;
     KS_NODISCARD KS_CONSTEXPR const_pointer_t   begin()     KS_CONST KS_NOEXCEPT;
     KS_NODISCARD KS_CONSTEXPR pointer_t         end()       KS_NOEXCEPT;
     KS_NODISCARD KS_CONSTEXPR const_pointer_t   end()       KS_CONST KS_NOEXCEPT;
-    KS_CONSTEXPR void       reserve     (std::size_t size)           KS_NOEXCEPT;
-    KS_CONSTEXPR void       push_back   (char_t ch)                  KS_NOEXCEPT;
-    KS_CONSTEXPR void       push_back   (const_pointer_t data)       KS_NOEXCEPT;
-    KS_CONSTEXPR char_t     pop_back    ()                           KS_NOEXCEPT;
-    template <typename... Args>
-    KS_CONSTEXPR string_core& append(Args&&... args) KS_NOEXCEPT;
+    KS_CONSTEXPR              void              reserve(std::size_t size) KS_NOEXCEPT;
+    KS_CONSTEXPR              string_core       resize(std::size_t size, char_t fill_char = char_t()) KS_NOEXCEPT;
+
+private:
+    KS_NODISCARD KS_CONSTEXPR   bool        isSmall() KS_NOEXCEPT;
+    KS_NODISCARD KS_CONSTEXPR   bool        isSmall() KS_CONST KS_NOEXCEPT;
+    KS_CONSTEXPR                pointer_t   pointer() KS_NOEXCEPT;
+    KS_CONSTEXPR            const_pointer_t pointer() KS_CONST KS_NOEXCEPT;
 };
 
 
@@ -158,8 +167,7 @@ KS_CONSTEXPR string_core<StringTrait_, Alloc_>::string_core(const string_core& r
 
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR string_core<StringTrait_, Alloc_>::string_core(const string_core& lhs, char_t ch) KS_NOEXCEPT {
-    category::Category cat = lhs.size() + 1 <= max_small_size ? category::Category::isSmall : category::Category::isMedium;
-    switch (cat) {
+    switch (lhs.size() + 1 <= max_small_size ? category::Category::isSmall : category::Category::isMedium) {
     case category::Category::isSmall:
         initSmall(lhs, &ch, 1);
         break;
@@ -172,8 +180,7 @@ KS_CONSTEXPR string_core<StringTrait_, Alloc_>::string_core(const string_core& l
 
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR string_core<StringTrait_, Alloc_>::string_core(const string_core& lhs, const_pointer_t data) KS_NOEXCEPT {
-    category::Category cat = lhs.size() + 1 <= max_small_size ? category::Category::isSmall : category::Category::isMedium;
-    switch (cat) {
+    switch (lhs.size() + 1 <= max_small_size ? category::Category::isSmall : category::Category::isMedium) {
     case category::Category::isSmall:
         initSmall(lhs, data, string_trait::length(data));
         break;
@@ -186,8 +193,7 @@ KS_CONSTEXPR string_core<StringTrait_, Alloc_>::string_core(const string_core& l
 
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR string_core<StringTrait_, Alloc_>::string_core(const string_core& lhs, const string_core& rhs) KS_NOEXCEPT {
-    category::Category cat = lhs.size() + rhs.size() <= max_small_size ? category::Category::isSmall : category::Category::isMedium;
-    switch (cat) {
+    switch (lhs.size() + rhs.size() <= max_small_size ? category::Category::isSmall : category::Category::isMedium) {
     case category::Category::isSmall:
         initSmall(lhs, rhs.begin(), rhs.size());
         break;
@@ -212,6 +218,31 @@ KS_CONSTEXPR string_core<StringTrait_, Alloc_>::string_core(const_pointer_t data
     }
 }
 
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_>::operator=(const string_core& rhs) KS_NOEXCEPT {
+    if (this != &rhs) {
+        assignment(rhs);
+    }
+    return *this;
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_>::operator=(string_core&& rhs) KS_NOEXCEPT {
+    if (this != &rhs) {
+        swap(rhs);
+    }
+    return *this;
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR typename string_core<StringTrait_, Alloc_>::reference_t string_core<StringTrait_, Alloc_>::operator[](std::size_t index) KS_NOEXCEPT {
+    return pointer()[index];
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR typename string_core<StringTrait_, Alloc_>::const_char_t string_core<StringTrait_, Alloc_>::operator[](std::size_t index) KS_CONST KS_NOEXCEPT {
+    return pointer()[index];
+}
 
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR void string_core<StringTrait_, Alloc_>::reset() KS_NOEXCEPT {
@@ -228,6 +259,36 @@ KS_CONSTEXPR bool string_core<StringTrait_, Alloc_>::isSmall() KS_CONST KS_NOEXC
     return box_t::category() == category::Category::isSmall;
 }
 
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR typename string_core<StringTrait_, Alloc_>::pointer_t string_core<StringTrait_, Alloc_>::pointer() KS_NOEXCEPT {
+    if (isSmall()) {
+        return as_small;
+    }
+    return as_ml.data_;
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR typename string_core<StringTrait_, Alloc_>::const_pointer_t string_core<StringTrait_, Alloc_>::pointer() KS_CONST KS_NOEXCEPT {
+    if (isSmall()) {
+        return as_small;
+    }
+    return as_ml.data_;
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR std::size_t string_core<StringTrait_, Alloc_>::get_addend_length(char_t) KS_NOEXCEPT {
+    return 1;
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR std::size_t string_core<StringTrait_, Alloc_>::get_addend_length(const_pointer_t data) KS_NOEXCEPT {
+    return string_trait::length(data);
+}
+
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR std::size_t string_core<StringTrait_, Alloc_>::get_addend_length(const string_core& rhs) KS_NOEXCEPT {
+    return rhs.size();
+}
 
 template <typename StringTrait_, typename Alloc_>
 void string_core<StringTrait_, Alloc_>::setSmallSize(std::size_t s) {
@@ -337,36 +398,39 @@ void string_core<StringTrait_, Alloc_>::reserveMedium(std::size_t size) {
 }
 
 template <typename StringTrait_, typename Alloc_>
-void string_core<StringTrait_, Alloc_>::swapSmall(const string_core& rhs) {
+void string_core<StringTrait_, Alloc_>::swapSmall(string_core& rhs) {
     if (this == &rhs) {
         return;
     }
 
     if (isSmall()) {
-        box_buffer_t tmp = this->as_small;
-        this->as_small = rhs.as_small;
-        rhs.as_small = tmp;
+        char_t tmp[sizeof(as_small)];
+        std::memcpy(tmp, this->as_small, sizeof(this->as_small));
+        std::memcpy(this->as_small, rhs.as_small, sizeof(this->as_small));
+        std::memcpy(rhs.as_small, tmp, sizeof(this->as_small));
     } else {
-        box_buffer_t tmp_buffer = rhs.as_small;
-        box_value_t tmp_value = this->as_ml;
+        char_t tmp_buffer[sizeof(as_small)];
+        std::memcpy(tmp_buffer, rhs.as_small, sizeof(rhs.as_small));
+        auto tmp_value = this->as_ml;
         rhs.as_ml = tmp_value;
-        this->as_small = tmp_buffer;
+        std::memcpy(this->as_small, tmp_buffer, sizeof(this->as_small));
     }
 }
 
 template <typename StringTrait_, typename Alloc_>
-void string_core<StringTrait_, Alloc_>::swapMedium(const string_core& rhs) {
+void string_core<StringTrait_, Alloc_>::swapMedium(string_core& rhs) {
     if (this == &rhs) {
         return;
     }
 
     if (isSmall()) {
-        box_buffer_t tmp_buffer = this->as_small;
-        box_value_t tmp_value = rhs.as_small;
-        rhs.as_small = tmp_buffer;
+        char_t tmp_buffer[sizeof(as_small)];
+        std::memcpy(tmp_buffer, this->as_small, sizeof(this->as_small));
+        auto tmp_value = rhs.as_ml;
+        std::memcpy(rhs.as_small, tmp_buffer, sizeof(rhs.as_small));
         this->as_ml = tmp_value;
     } else {
-        box_value_t tmp = this->as_ml;
+        auto tmp = this->as_ml;
         this->as_ml = rhs.as_ml;
         rhs.as_ml = tmp;
     }
@@ -406,39 +470,66 @@ KS_CONSTEXPR bool string_core<StringTrait_, Alloc_>::compare(const_pointer_t str
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR void string_core<StringTrait_, Alloc_>::appendSmall(const_pointer_t data, std::size_t size) KS_NOEXCEPT {
     const std::size_t old_size = this->size();
+    const std::size_t new_size = old_size + size;
+    const void* mode_byte_addr = static_cast<const void*>(as_small + max_small_size);
+
+    std::cout << "\n=== appendSmall Debug ===" << std::endl;
+    std::cout << "[Before] this               = " << this << std::endl;
+    std::cout << "[Before] as_small           = " << static_cast<void*>(as_small) << std::endl;
+    std::cout << "[Before] begin write at     = " << static_cast<void*>(as_small + old_size) << std::endl;
+    std::cout << "[Before] size byte address  = " << mode_byte_addr << "  (DO NOT TOUCH)" << std::endl;
+    std::cout << "[Before] mode byte value    = " << (int)(as_small[max_small_size]) << std::endl;
+    std::cout << "[Before] old_size=" << old_size << ", append size=" << size << ", new_size=" << new_size << std::endl;
+
     string_trait::copy(as_small + old_size, data, size);
-    setSmallSize(old_size + size);
+    setSmallSize(new_size);
+
+    std::cout << "[After ] as_small           = " << static_cast<void*>(as_small) << std::endl;
+    std::cout << "[After ] category           = " << (isSmall() ? "small" : "medium") << std::endl;
+    std::cout << "[After ] begin write at     = " << static_cast<void*>(as_small + old_size) << std::endl;
+    std::cout << "[After ] size byte address  = " << mode_byte_addr << std::endl;
+    std::cout << "[After ] mode byte value    = " << (int)(as_small[max_small_size]) << std::endl;
+    std::cout << "[After ] reported new_size  = " << this->size() << std::endl;
+
+    std::cout << "[Dump] small buffer bytes: ";
+    for (size_t i = 0; i <= max_small_size + 2; ++i) {
+        std::cout << "(" << i << ":" << (int)(unsigned char)as_small[i] << ") ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "==========================\n" << std::endl;
 }
 
-    template <typename StringTrait_, typename Alloc_>
-    KS_CONSTEXPR void string_core<StringTrait_, Alloc_>::appendMedium(const_pointer_t data, std::size_t size) KS_NOEXCEPT {
-        std::cout << "[appendMedium] this=" << this
-                  << ", data_=" << static_cast<void*>(as_ml.data_)
-                  << ", size=" << this->size()
-                  << ", append_size=" << size
-                  << ", capacity=" << capacity()
-                  << std::endl;
+template <typename StringTrait_, typename Alloc_>
+KS_CONSTEXPR void string_core<StringTrait_, Alloc_>::appendMedium(const_pointer_t data, std::size_t size) KS_NOEXCEPT {
+    std::cout << "[appendMedium] this=" << this
+              << ", data_=" << static_cast<void*>(as_ml.data_)
+              << ", size=" << this->size()
+              << ", append_size=" << size
+              << ", capacity=" << capacity()
+              << std::endl;
 
-        if (capacity() < this->size() + size + 1) {
-            reserve(this->size() + size + 1);
-            std::cout << "[appendMedium] after reserve, data_=" << static_cast<void*>(as_ml.data_) << std::endl;
-        }
-
-        std::cout << "[appendMedium] this=" << this
-           << ", data_=" << static_cast<void*>(as_ml.data_)
-           << ", size=" << this->size()
-           << ", append_size=" << size
-           << ", capacity=" << capacity()
-           << std::endl;
-
-        string_trait::copy(as_ml.data_ + this->size(), data, size);
-
-        as_ml.size_ += size;
-        as_ml.data_[this->size()] = char_t();
-
-        std::cout << "[appendMedium] after copy, data_=" << static_cast<void*>(as_ml.data_)
-                  << ", new_size=" << this->size() << std::endl;
+    if (capacity() < this->size() + size + 1) {
+        reserve(this->size() + size + 1);
+        std::cout << "[appendMedium] after reserve, data_=" << static_cast<void*>(as_ml.data_) << std::endl;
     }
+
+    std::cout << "[appendMedium] this=" << this
+       << ", data_=" << static_cast<void*>(as_ml.data_)
+       << ", size=" << this->size()
+       << ", append_size=" << size
+       << ", capacity=" << capacity()
+       << std::endl;
+
+    string_trait::copy(as_ml.data_ + this->size(), data, size);
+
+    as_ml.size_ += size;
+    as_ml.data_[this->size()] = char_t();
+
+    std::cout << "[appendMedium] after copy, data_=" << static_cast<void*>(as_ml.data_)
+              << ", new_size=" << this->size() << std::endl;
+}
+
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_>::assignmentSmall(const_pointer_t data, std::size_t size) KS_NOEXCEPT {
     string_trait::copy(as_ml.data_, data, size);
@@ -455,13 +546,13 @@ KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_
 
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_>::assignment(const_pointer_t data, std::size_t size) KS_NOEXCEPT {
-    if (capacity() < as_ml.size_ + size + 1) {
+    if (capacity() < size + 1) {
         reserve(as_ml.size_ + size + 1);
     }
     if (isSmall()) {
-        return assignSmall(data, size);
+        return assignmentSmall(data, size);
     }
-    return assignMedium(data, size);
+    return assignmentMedium(data, size);
 }
 
 template <typename StringTrait_, typename Alloc_>
@@ -561,13 +652,12 @@ KS_CONSTEXPR typename string_core<StringTrait_, Alloc_>::const_pointer_t string_
 }
 
 template <typename StringTrait_, typename Alloc_>
-KS_CONSTEXPR void string_core<StringTrait_, Alloc_>::swap(const string_core& rhs) KS_NOEXCEPT {
+KS_CONSTEXPR void string_core<StringTrait_, Alloc_>::swap(string_core& rhs) KS_NOEXCEPT {
     if (isSmall()) {
         swapSmall(rhs);
     }
     swapMedium(rhs);
 }
-
 
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR typename string_core<StringTrait_, Alloc_>::pointer_t string_core<StringTrait_, Alloc_>::begin() KS_NOEXCEPT {
@@ -611,23 +701,38 @@ constexpr void string_core<StringTrait_, Alloc_>::reserve(std::size_t size) KS_N
 }
 
 template <typename StringTrait_, typename Alloc_>
-KS_CONSTEXPR void string_core<StringTrait_, Alloc_>::push_back(char_t ch) KS_NOEXCEPT {
+KS_CONSTEXPR string_core<StringTrait_, Alloc_> string_core<StringTrait_, Alloc_>::resize(std::size_t size, char_t fill_char) KS_NOEXCEPT {
+    if (size <= this->size()) {
+        if (isSmall()) {
+            setSmallSize(size);
+        } else {
+            as_ml.size_ = size;
+            as_ml.data_[size] = char_t();
+        }
+        return *this;
+    }
 
-}
+    if (isSmall()) {
+        if (size < max_small_size) {
+            reserveSmall(size);
+            std::fill(pointer() + this->size(), pointer() + size, fill_char);
+            setSmallSize(size);
+            return *this;
+        }
+    } else {
+        if (size > as_ml.capacity()) {
+            reserveMedium(size);
+        }
+    }
 
-template <typename StringTrait_, typename Alloc_>
-KS_CONSTEXPR void string_core<StringTrait_, Alloc_>::push_back(const_pointer_t data) KS_NOEXCEPT {
-
-}
-
-template <typename StringTrait_, typename Alloc_>
-KS_CONSTEXPR typename string_core<StringTrait_, Alloc_>::char_t string_core<StringTrait_, Alloc_>::pop_back() KS_NOEXCEPT {
-
+    std::fill(pointer() + this->size(), pointer() + size, fill_char);
+    as_ml.size_ = size;
+    return *this;
 }
 
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_>::append(char_t ch) KS_NOEXCEPT {
-    if (this->size() + 1 <= max_small_size) {
+    if (this->size() + 1 < max_small_size) {
         appendSmall(&ch, 1);
     } else {
         appendMedium(&ch, 1);
@@ -638,8 +743,7 @@ KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_
 template <typename StringTrait_, typename Alloc_>
 KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_>::append(const_pointer_t data) KS_NOEXCEPT {
     std::size_t len = string_trait::length(data);
-    std::size_t new_size = this->size() + len + 1;
-    std::cout << data << std::endl;
+    std::size_t new_size = this->size() + len;
     if (new_size < max_small_size) {
         appendSmall(data, len);
     } else {
@@ -656,13 +760,6 @@ KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_
     } else {
         appendMedium(rhs.begin(), rhs.size());
     }
-    return *this;
-}
-
-template <typename StringTrait_, typename Alloc_>
-template <typename... Args>
-KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_>::append(Args&&... args) KS_NOEXCEPT {
-    (append(std::forward<Args>(args)), ...);
     return *this;
 }
 

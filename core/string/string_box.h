@@ -54,6 +54,14 @@ struct string_box {
             : category::Category::isSmall;
     }
 
+    KS_CONSTEXPR void forceCategory(category::Category cat) KS_NOEXCEPT {
+        if (cat == category::Category::isMedium) {
+            as_ml.capacity_ |= category_mask;
+        } else {
+            as_ml.capacity_ &= ~category_mask;
+        }
+    }
+
 };
 
 }

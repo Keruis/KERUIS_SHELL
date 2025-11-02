@@ -7,12 +7,9 @@
 using namespace ks::core::string::type_conversion;
 
 int main() {
-    ksstd::string a("124567");
-    ksstd::string b("124567");
-    ksstd::string c = a + b + "sss";
-    c.append("dddda").append("sssssss");
-    //int n = ks::core::types::tags::toInt <- a;
-    c = a + "sss";
+    ksstd::string c;
+    c.append("dddda", "23232");
+    c.append("sssssshjhvutc tfgcv ");
     std::cout << c.c_str() <<std::endl;
     return 0;
 }
