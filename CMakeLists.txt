@@ -4,9 +4,13 @@ project(KERUIS_SHELL CXX)
 set(CMAKE_CXX_STANDARD 23)
 
 add_subdirectory(core/math)
+add_subdirectory(platform)
+add_subdirectory(core/render)
 
 add_executable(KERUIS_SHELL
         app/main.cpp
 )
 
 target_link_libraries(KERUIS_SHELL math_lib)
+target_link_libraries(KERUIS_SHELL platform_lib)
+target_link_libraries(KERUIS_SHELL render_lib)

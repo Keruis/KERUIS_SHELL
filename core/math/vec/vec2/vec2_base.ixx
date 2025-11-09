@@ -125,6 +125,7 @@ private:
         }
         return *this;
     }
+
     template <typename Op, bool HasPrev, typename Prev, typename Arg, typename... Rest>
     KS_CONSTEXPR vector2& process_of_impl(Prev prev, Arg&& arg, Rest&&... rest) KS_NOEXCEPT {
         using T = std::remove_cvref_t<Arg>;
