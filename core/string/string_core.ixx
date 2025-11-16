@@ -1,16 +1,17 @@
-#ifndef STRING_CORE_H
-#define STRING_CORE_H
+module;
 
 #include <memory>
 #include <cstring>
 
-#include "string_box.h"
-#include "string_category.h"
-
 #include "../utils/attributes.h"
 #include "../memory/allocator.h"
 
-namespace ks::core::string::core {
+export module ks.core.string.string_core;
+
+import ks.core.string.string_box;
+import ks.core.string.string_category;
+
+export namespace ks::core::string::core {
 
 template <typename StringTrait_, typename Alloc_ = memory::allocator::allocator<typename StringTrait_::char_t>>
 class string_core : protected box::string_box<StringTrait_> {
@@ -725,5 +726,3 @@ KS_CONSTEXPR string_core<StringTrait_, Alloc_>& string_core<StringTrait_, Alloc_
 
 
 }
-
-#endif //STRING_CORE_H

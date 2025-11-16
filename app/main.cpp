@@ -78,66 +78,66 @@
 //     std::cout << "Test finished." << std::endl;
 //     return 0;
 // }
-#include <windows.h>
-import ks.core.render.input;
-import ks.platform;
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    switch (uMsg) {
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        return 0;
-    }
-    return DefWindowProc(hwnd, uMsg, wParam, lParam);
-}
-
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow) {
-    WNDCLASS wc = {};
-    wc.lpfnWndProc = WindowProc;
-    wc.hInstance = hInstance;
-    wc.lpszClassName = "test";
-    RegisterClass(&wc);
-
-    HWND hwnd = CreateWindowEx(
-        0,
-        "test",
-        "eee",
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
-        nullptr, nullptr, hInstance, nullptr
-    );
-
-    if (!hwnd) return 0;
-
-    ShowWindow(hwnd, nCmdShow);
-
-    ks::platform::win32::WindowWin32 window;
-    window.Init(&hwnd);
-    ks::platform::win32::CursorControllerWin32 cursor;
-    cursor.Init(&hwnd);
-
-    ks::core::render::input::Mouse mouse(800, 600);
-    mouse.BindWindow(&window);
-    mouse.BindCursorController(&cursor);
-
-    MSG msg = {};
-    while (true) {
-        while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-            if (msg.message == WM_QUIT) return 0;
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-
-
-        mouse.frame();
-
-        std::cout << mouse.getPosition().x << ", " << mouse.getPosition().y << std::endl;
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(16)); // 约60FPS
-    }
-
-    return 0;
-}
+// #include <windows.h>
+// import ks.core.render.input;
+// import ks.platform;
+//
+// LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+//     switch (uMsg) {
+//     case WM_DESTROY:
+//         PostQuitMessage(0);
+//         return 0;
+//     }
+//     return DefWindowProc(hwnd, uMsg, wParam, lParam);
+// }
+//
+// int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow) {
+//     WNDCLASS wc = {};
+//     wc.lpfnWndProc = WindowProc;
+//     wc.hInstance = hInstance;
+//     wc.lpszClassName = "test";
+//     RegisterClass(&wc);
+//
+//     HWND hwnd = CreateWindowEx(
+//         0,
+//         "test",
+//         "eee",
+//         WS_OVERLAPPEDWINDOW,
+//         CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
+//         nullptr, nullptr, hInstance, nullptr
+//     );
+//
+//     if (!hwnd) return 0;
+//
+//     ShowWindow(hwnd, nCmdShow);
+//
+//     ks::platform::win32::WindowWin32 window;
+//     window.Init(&hwnd);
+//     ks::platform::win32::CursorControllerWin32 cursor;
+//     cursor.Init(&hwnd);
+//
+//     ks::core::render::input::Mouse mouse(800, 600);
+//     mouse.BindWindow(&window);
+//     mouse.BindCursorController(&cursor);
+//
+//     MSG msg = {};
+//     while (true) {
+//         while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+//             if (msg.message == WM_QUIT) return 0;
+//             TranslateMessage(&msg);
+//             DispatchMessage(&msg);
+//         }
+//
+//
+//         mouse.frame();
+//
+//         std::cout << mouse.getPosition().x << ", " << mouse.getPosition().y << std::endl;
+//
+//         std::this_thread::sleep_for(std::chrono::milliseconds(16)); // 约60FPS
+//     }
+//
+//     return 0;
+// }
 
 // int main() {
 //     ks::platform::win32::CursorControllerWin32 cursor;
@@ -149,3 +149,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow) {
 //
 //     mose.setCursorMode(ks::core::render::input::CursorMode::Normal);
 // }
+
+import kstd.string;
+
+int main() {
+    ksstd::string a("ssss");
+    std::cout << a.c_str() << std::endl;
+}
