@@ -150,9 +150,19 @@
 //     mose.setCursorMode(ks::core::render::input::CursorMode::Normal);
 // }
 
-import kstd.string;
+// import kstd.string;
+//
+// int main() {
+//     ksstd::string a("ssss");
+//     std::cout << a.c_str() << std::endl;
+// }
+
+import kstd.image;
 
 int main() {
-    ksstd::string a("ssss");
-    std::cout << a.c_str() << std::endl;
+
+    ks::core::image::pixel<rgb_t> a(30, 30, 30);
+    std::cout << static_cast<int>(a.r) << std::endl;
+    auto w = ks::core::image::color<rgb_t>::White();
+    std::cout << static_cast<int>(w.r) << std::endl;
 }

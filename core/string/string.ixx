@@ -8,7 +8,7 @@ import ks.core.string.basic_string;
 import ks.core.string.string_trait;
 
 
-namespace ks::core::string {
+export namespace ks::core::string {
 
     template <typename CharT_>
     using base = basic::basic_string<trait::string_trait<CharT_>>;

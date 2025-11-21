@@ -1,5 +1,8 @@
-export module ks.platform.common.IWindow;
+module;
+
 #include <utility>
+
+export module ks.platform.common.IWindow;
 
 export namespace ks::platform {
 

@@ -3,7 +3,7 @@ module;
 #include "../utils/type_traits.h"
 #include "types/character_type.h"
 
-#include <string.h>
+#include <string>
 #include <cstring>
 #include <cwchar>
 #include <cstddef>
