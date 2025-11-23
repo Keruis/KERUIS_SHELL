@@ -10,14 +10,30 @@ target_sources(image_lib PUBLIC
         FILE_SET CXX_MODULES
         FILES
 
+        utils/color_convert.ixx
+
+        color_constant.ixx
+        color_channel.ixx
+        color_tag.ixx
         color_space.ixx
         pixel_weights.ixx
 
         pixel_traits.ixx
         pixel.ixx
         pixel_RGB.ixx
+        pixel_RGBA.ixx
         pixel_HSV.ixx
+        pixel_HSVA.ixx
         pixel_impl.ixx
+
+        color_tag.ixx
+        color_builder/color_builder.ixx
+        color_builder/color_builder_impl.ixx
+
+        color_builder/white.ixx
+        color_builder/black.ixx
+        color_builder/red.ixx
+        color_builder/yellow.ixx
 
         color.ixx
 

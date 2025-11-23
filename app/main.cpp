@@ -161,8 +161,8 @@ import kstd.image;
 
 int main() {
 
-    ks::core::image::pixel<rgb_t> a(30, 30, 30);
+    ks::core::image::pixel<ks::core::image::rgb> a(30, 30, 30);
     std::cout << static_cast<int>(a.r) << std::endl;
-    auto w = ks::core::image::color<rgb_t>::White();
-    std::cout << static_cast<int>(w.r) << std::endl;
+    auto w = ks::core::image::color<ks::core::image::hsv>::Yellow();
+    std::cout << static_cast<int>(w.v) << std::endl;
 }

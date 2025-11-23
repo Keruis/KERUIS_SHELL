@@ -4,8 +4,7 @@
 #include <utility>
 #include <tuple>
 
-namespace ks::core::utils
-{
+namespace ks::core::utils {
     template <auto MatchValue, typename Func>
     struct Case {
         static constexpr auto value = MatchValue;

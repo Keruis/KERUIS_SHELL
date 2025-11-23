@@ -6,30 +6,31 @@ export module ks.core.image.color;
 
 import ks.core.image.color_space;
 import ks.core.image.pixel_impl;
+import ks.core.image.color_builder_impl;
 
 export namespace ks::core::image {
 
-template <typename ColorSpace>
+template <color_model ColorSpace>
 struct color {
     using pixel_t = pixel<ColorSpace>;
     using trait   = typename pixel_t::traits;
     using value_t = typename pixel_t::value_t;
 
     static KS_CONSTEXPR pixel_t White(value_t alpha = trait::MAX) {
-        return pixel_t{ trait::MAX, trait::MAX, trait::MAX, alpha };
+        return color_builder<ColorSpace>::template make<color_tag::White>::build(alpha);
     }
 
+    static KS_CONSTEXPR pixel_t Black(value_t alpha = trait::MAX) {
+        return color_builder<ColorSpace>::template make<color_tag::Black>::build(alpha);
+    }
 
+    static KS_CONSTEXPR pixel_t Red(value_t alpha = trait::MAX) {
+        return color_builder<ColorSpace>::template make<color_tag::Red>::build(alpha);
+    }
 
-
-
-
-
-
-
-
-
-
+    static KS_CONSTEXPR pixel_t Yellow(value_t alpha = trait::MAX) {
+        return color_builder<ColorSpace>::template make<color_tag::Yellow>::build(alpha);
+    }
 
 
 

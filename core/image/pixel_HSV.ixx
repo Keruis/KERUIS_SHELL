@@ -8,25 +8,24 @@ import :pixel_base;
 import ks.core.image.color_space;
 import ks.core.image.pixel_traits;
 
-export template <>
-struct ks::core::image::pixel<hsv_t> {
-    using traits = pixel_traits<hsv_t>;
+template <>
+struct ks::core::image::pixel<ks::core::image::color_model::hsv> {
+    using traits = pixel_traits<hsv>;
     using value_t = traits::value_t;
 
     value_t h{traits::MIN};
     value_t s{traits::MIN};
     value_t v{traits::MIN};
-    value_t a{traits::MIN};
 
     KS_CONSTEXPR pixel() = default;
-    KS_CONSTEXPR explicit pixel(const value_t h_, const value_t s_, const value_t v_, const value_t a_ = traits::MAX)
-        : h(h_), s(s_), v(v_), a(a_) {}
+    KS_CONSTEXPR explicit pixel(const value_t h_, const value_t s_, const value_t v_) KS_NOEXCEPT
+        : h(h_), s(s_), v(v_) {}
 
-    bool operator==(const pixel& rhs) KS_CONST {
+    KS_CONSTEXPR bool operator==(const pixel& rhs) KS_CONST KS_NOEXCEPT {
         return h == rhs.h && s == rhs.s && v == rhs.v;
     }
 
-    bool operator!=(const pixel& rhs) KS_CONST {
+    KS_CONSTEXPR bool operator!=(const pixel& rhs) KS_CONST KS_NOEXCEPT {
         return !(*this == rhs);
     }
 };

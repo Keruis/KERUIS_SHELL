@@ -7,6 +7,7 @@ namespace ks::core::utils::attributes {
 #define KS_ALWAYS_INLINE __attribute__((always_inline)) inline
 #define KS_PURE         __attribute__((pure))
 #define KS_CONST        const
+#define KS_MAYBE_UNUSED [[maybe_unused]]
 #elif defined(_MSC_VER)
 #define KS_ALWAYS_INLINE __forceinline
 #define KS_PURE
