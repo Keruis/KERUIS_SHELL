@@ -16,12 +16,12 @@ constexpr auto hex_to_rgb(uint32_t hex) {
 }
 
 constexpr auto rgb_to_hsv(uint8_t r, uint8_t g, uint8_t b) {
-    float rf = r / 255.f;
-    float gf = g / 255.f;
-    float bf = b / 255.f;
+    const float rf = r / 255.f;
+    const float gf = g / 255.f;
+    const float bf = b / 255.f;
 
-    float max = rf > gf ? (rf > bf ? rf : bf) : (gf > bf ? gf : bf);
-    float min = rf < gf ? (rf < bf ? rf : bf) : (gf < bf ? gf : bf);
+    const float max = rf > gf ? (rf > bf ? rf : bf) : (gf > bf ? gf : bf);
+    const float min = rf < gf ? (rf < bf ? rf : bf) : (gf < bf ? gf : bf);
     float h = 0.f, s = 0.f, v = max;
 
     float delta = max - min;

@@ -7,20 +7,25 @@ export module ks.core.image.color_constant;
 import ks.core.image.color_space;
 import ks.core.image.color_tag;
 import ks.core.image.color_channel;
+import ks.core.image.utils.color_parse;
 
 import ks.core.image.utils.color_convert;
 
 constexpr auto white_rgb = ks::core::image::utils::hex_to_rgb(0xFFFFFF);
-constexpr auto white_hsv = ks::core::image::utils::rgb_to_hsv(std::get<0>(white_rgb), std::get<1>(white_rgb), std::get<2>(white_rgb));
+constexpr auto white_hsv = ks::core::image::utils::rgb_to_hsv
+    (ks::core::image::utils::get_color("white")->r, ks::core::image::utils::get_color("white")->g, ks::core::image::utils::get_color("white")->b);
 
 constexpr auto black_rgb = ks::core::image::utils::hex_to_rgb(0x000000);
-constexpr auto black_hsv = ks::core::image::utils::rgb_to_hsv(std::get<0>(black_rgb), std::get<1>(black_rgb), std::get<2>(black_rgb));
+constexpr auto black_hsv = ks::core::image::utils::rgb_to_hsv
+    (ks::core::image::utils::get_color("black")->r, ks::core::image::utils::get_color("black")->g, ks::core::image::utils::get_color("black")->b);
 
 constexpr auto red_rgb = ks::core::image::utils::hex_to_rgb(0xFF0000);
-constexpr auto red_hsv = ks::core::image::utils::rgb_to_hsv(std::get<0>(red_rgb), std::get<1>(red_rgb), std::get<2>(red_rgb));
+constexpr auto red_hsv = ks::core::image::utils::rgb_to_hsv
+    (ks::core::image::utils::get_color("red")->r, ks::core::image::utils::get_color("red")->g, ks::core::image::utils::get_color("red")->b);
 
-constexpr auto yellow_rgb = ks::core::image::utils::hex_to_rgb(0xFF0000);
-constexpr auto yellow_hsv = ks::core::image::utils::rgb_to_hsv(std::get<0>(yellow_rgb), std::get<1>(yellow_rgb), std::get<2>(yellow_rgb));
+constexpr auto yellow_rgb = ks::core::image::utils::hex_to_rgb(0x00FFFF);
+constexpr auto yellow_hsv = ks::core::image::utils::rgb_to_hsv
+    (ks::core::image::utils::get_color("yellow")->r, ks::core::image::utils::get_color("yellow")->g, ks::core::image::utils::get_color("yellow")->b);
 
 
 export namespace ks::core::image {

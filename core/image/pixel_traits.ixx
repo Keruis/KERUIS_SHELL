@@ -5,6 +5,7 @@ module;
 export module ks.core.image.pixel_traits;
 
 import ks.core.image.color_space;
+import ks.core.image.color_channel;
 
 export namespace ks::core::image {
 
@@ -14,6 +15,9 @@ struct pixel_traits;
 template <>
 struct pixel_traits<rgb> {
     using value_t = uint8_t;
+    static constexpr constants::color_channel color_channel_1 = constants::color_channel::R;
+    static constexpr constants::color_channel color_channel_2 = constants::color_channel::G;
+    static constexpr constants::color_channel color_channel_3 = constants::color_channel::B;
 
     static constexpr int CHANNELS = 3;
 
@@ -26,6 +30,10 @@ struct pixel_traits<rgb> {
 template <>
 struct pixel_traits<rgba> {
     using value_t = uint8_t;
+    static constexpr constants::color_channel color_channel_1 = constants::color_channel::R;
+    static constexpr constants::color_channel color_channel_2 = constants::color_channel::G;
+    static constexpr constants::color_channel color_channel_3 = constants::color_channel::B;
+    static constexpr constants::color_channel color_channel_4 = constants::color_channel::A;
 
     static constexpr int CHANNELS = 4;
 
@@ -38,6 +46,9 @@ struct pixel_traits<rgba> {
 template <>
 struct pixel_traits<hsv> {
     using value_t = float;
+    static constexpr constants::color_channel color_channel_1 = constants::color_channel::H;
+    static constexpr constants::color_channel color_channel_2 = constants::color_channel::S;
+    static constexpr constants::color_channel color_channel_3 = constants::color_channel::V;
 
     static constexpr int CHANNELS = 3;
 
@@ -50,6 +61,10 @@ struct pixel_traits<hsv> {
 template <>
 struct pixel_traits<hsva> {
     using value_t = float;
+    static constexpr constants::color_channel color_channel_1 = constants::color_channel::H;
+    static constexpr constants::color_channel color_channel_2 = constants::color_channel::S;
+    static constexpr constants::color_channel color_channel_3 = constants::color_channel::V;
+    static constexpr constants::color_channel color_channel_4 = constants::color_channel::A;
 
     static constexpr int CHANNELS = 4;
 

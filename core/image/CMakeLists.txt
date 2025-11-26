@@ -11,6 +11,7 @@ target_sources(image_lib PUBLIC
         FILES
 
         utils/color_convert.ixx
+        utils/color_parse.ixx
 
         color_constant.ixx
         color_channel.ixx
@@ -30,15 +31,12 @@ target_sources(image_lib PUBLIC
         color_builder/color_builder.ixx
         color_builder/color_builder_impl.ixx
 
-        color_builder/white.ixx
-        color_builder/black.ixx
-        color_builder/red.ixx
-        color_builder/yellow.ixx
-
         color.ixx
 
         mod.image.ixx
 )
+
+target_link_libraries(image_lib PRIVATE constexpr_utils_lib)
 
 target_compile_features(image_lib PUBLIC cxx_std_23)
 

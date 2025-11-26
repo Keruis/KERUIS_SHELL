@@ -3,6 +3,7 @@ project(KERUIS_SHELL CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
+add_subdirectory(core/constexpr_utils)
 add_subdirectory(core/math)
 #add_subdirectory(platform)
 #add_subdirectory(core/render)
