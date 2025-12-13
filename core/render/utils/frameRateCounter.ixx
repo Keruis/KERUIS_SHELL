@@ -6,7 +6,6 @@ module;
 #include <thread>
 #include <deque>
 #include <utility>
-#include <numeric>
 #include <condition_variable>
 
 export module ks.core.render.utils:frameRateCounter;

@@ -5,131 +5,48 @@ module;
 export module ks.core.image.color_constant;
 
 import ks.core.image.color_space;
-import ks.core.image.color_tag;
 import ks.core.image.color_channel;
 import ks.core.image.utils.color_parse;
+import ks.core.constexpr_utils.string_literal;
+
+import ks.core.image.pixel_impl;
 
 import ks.core.image.utils.color_convert;
 
-constexpr auto white_rgb = ks::core::image::utils::hex_to_rgb(0xFFFFFF);
-constexpr auto white_hsv = ks::core::image::utils::rgb_to_hsv
-    (ks::core::image::utils::get_color("white")->r, ks::core::image::utils::get_color("white")->g, ks::core::image::utils::get_color("white")->b);
-
-constexpr auto black_rgb = ks::core::image::utils::hex_to_rgb(0x000000);
-constexpr auto black_hsv = ks::core::image::utils::rgb_to_hsv
-    (ks::core::image::utils::get_color("black")->r, ks::core::image::utils::get_color("black")->g, ks::core::image::utils::get_color("black")->b);
-
-constexpr auto red_rgb = ks::core::image::utils::hex_to_rgb(0xFF0000);
-constexpr auto red_hsv = ks::core::image::utils::rgb_to_hsv
-    (ks::core::image::utils::get_color("red")->r, ks::core::image::utils::get_color("red")->g, ks::core::image::utils::get_color("red")->b);
-
-constexpr auto yellow_rgb = ks::core::image::utils::hex_to_rgb(0x00FFFF);
-constexpr auto yellow_hsv = ks::core::image::utils::rgb_to_hsv
-    (ks::core::image::utils::get_color("yellow")->r, ks::core::image::utils::get_color("yellow")->g, ks::core::image::utils::get_color("yellow")->b);
-
-
 export namespace ks::core::image {
 
-template <color_model>
+template <color_model CM>
 struct ColorLookup {
-    template <color_tag>
+    template <string_literal STR>
     struct Color {
-        template <constants::color_channel>
+        template <constants::color_channel CH>
         struct ChannelConst {
+            using value_t = typename pixel<CM>::traits::value_t;
+
+            static constexpr value_t get_value() {
+                if constexpr (CM == rgb || CM == rgba) {
+                    if (CH == constants::color_channel::R) {
+                        return utils::get_color<STR>()->r;
+                    } else if constexpr (CH == constants::color_channel::G) {
+                        return utils::get_color<STR>()->g;
+                    } else {
+                        return utils::get_color<STR>()->b;
+                    }
+                } else if constexpr (CM == hsv || CM == hsva) {
+                    constexpr auto hsv = utils::rgb_to_hsv(utils::get_color<STR>()->r, utils::get_color<STR>()->g, utils::get_color<STR>()->b);
+                    if (CH == constants::color_channel::H) {
+                        return std::get<0>(hsv);
+                    } else if constexpr (CH == constants::color_channel::S) {
+                        return std::get<1>(hsv);
+                    } else {
+                        return std::get<2>(hsv);
+                    }
+                }
+                return value_t{};
+            }
 
         };
     };
 };
-
-// === RGB / White / Channels ===
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::White>::ChannelConst<constants::color_channel::R> { static constexpr unsigned char value = std::get<0>(white_rgb); };
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::White>::ChannelConst<constants::color_channel::G> { static constexpr unsigned char value = std::get<1>(white_rgb); };
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::White>::ChannelConst<constants::color_channel::B> { static constexpr unsigned char value = std::get<2>(white_rgb); };
-
-// === RGBA / White / Channels ===
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::White>::ChannelConst<constants::color_channel::R> { static constexpr unsigned char value = std::get<0>(white_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::White>::ChannelConst<constants::color_channel::G> { static constexpr unsigned char value = std::get<1>(white_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::White>::ChannelConst<constants::color_channel::B> { static constexpr unsigned char value = std::get<2>(white_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::White>::ChannelConst<constants::color_channel::A> { static constexpr unsigned char value = 255; };
-
-// === HSV / White / Channels ===
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::White>::ChannelConst<constants::color_channel::H> { static constexpr float value = std::get<0>(white_hsv); };
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::White>::ChannelConst<constants::color_channel::S> { static constexpr float value = std::get<1>(white_hsv); };
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::White>::ChannelConst<constants::color_channel::V> { static constexpr float value = std::get<2>(white_hsv); };
-
-// === HSVA / White / Channels ===
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::White>::ChannelConst<constants::color_channel::H> { static constexpr float value = std::get<0>(white_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::White>::ChannelConst<constants::color_channel::S> { static constexpr float value = std::get<1>(white_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::White>::ChannelConst<constants::color_channel::V> { static constexpr float value = std::get<2>(white_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::White>::ChannelConst<constants::color_channel::A> { static constexpr float value = 1.f; };
-
-
-// === RGB / Black / Channels ===
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::Black>::ChannelConst<constants::color_channel::R> { static constexpr unsigned char value = std::get<0>(black_rgb); };
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::Black>::ChannelConst<constants::color_channel::G> { static constexpr unsigned char value = std::get<1>(black_rgb); };
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::Black>::ChannelConst<constants::color_channel::B> { static constexpr unsigned char value = std::get<2>(black_rgb); };
-
-// === RGBA / Black / Channels ===
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Black>::ChannelConst<constants::color_channel::R> { static constexpr unsigned char value = std::get<0>(black_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Black>::ChannelConst<constants::color_channel::G> { static constexpr unsigned char value = std::get<1>(black_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Black>::ChannelConst<constants::color_channel::B> { static constexpr unsigned char value = std::get<2>(black_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Black>::ChannelConst<constants::color_channel::A> { static constexpr unsigned char value = 255; };
-
-// === HSV / Black / Channels ===
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::Black>::ChannelConst<constants::color_channel::H> { static constexpr float value = std::get<0>(black_hsv); };
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::Black>::ChannelConst<constants::color_channel::S> { static constexpr float value = std::get<1>(black_hsv); };
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::Black>::ChannelConst<constants::color_channel::V> { static constexpr float value = std::get<2>(black_hsv); };
-
-// === HSVA / Black / Channels ===
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Black>::ChannelConst<constants::color_channel::H> { static constexpr float value = std::get<0>(black_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Black>::ChannelConst<constants::color_channel::S> { static constexpr float value = std::get<1>(black_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Black>::ChannelConst<constants::color_channel::V> { static constexpr float value = std::get<2>(black_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Black>::ChannelConst<constants::color_channel::A> { static constexpr float value = 1.f; };
-
-
-// === RGB / Red / Channels ===
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::Red>::ChannelConst<constants::color_channel::R> { static constexpr unsigned char value = std::get<0>(red_rgb); };
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::Red>::ChannelConst<constants::color_channel::G> { static constexpr unsigned char value = std::get<1>(red_rgb); };
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::Red>::ChannelConst<constants::color_channel::B> { static constexpr unsigned char value = std::get<2>(red_rgb); };
-
-// === RGBA / Red / Channels ===
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Red>::ChannelConst<constants::color_channel::R> { static constexpr unsigned char value = std::get<0>(red_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Red>::ChannelConst<constants::color_channel::G> { static constexpr unsigned char value = std::get<1>(red_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Red>::ChannelConst<constants::color_channel::B> { static constexpr unsigned char value = std::get<2>(red_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Red>::ChannelConst<constants::color_channel::A> { static constexpr unsigned char value = 255; };
-
-// === HSV / Red / Channels ===
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::Red>::ChannelConst<constants::color_channel::H> { static constexpr float value = std::get<0>(red_hsv); };
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::Red>::ChannelConst<constants::color_channel::S> { static constexpr float value = std::get<1>(red_hsv); };
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::Red>::ChannelConst<constants::color_channel::V> { static constexpr float value = std::get<2>(red_hsv); };
-
-// === HSVA / Red / Channels ===
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Red>::ChannelConst<constants::color_channel::H> { static constexpr float value = std::get<0>(red_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Red>::ChannelConst<constants::color_channel::S> { static constexpr float value = std::get<1>(red_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Red>::ChannelConst<constants::color_channel::V> { static constexpr float value = std::get<2>(red_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Red>::ChannelConst<constants::color_channel::A> { static constexpr float value = 1.f; };
-
-
-// === RGB / Yellow / Channels ===
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::R> { static constexpr unsigned char value = std::get<0>(yellow_rgb); };
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::G> { static constexpr unsigned char value = std::get<1>(yellow_rgb); };
-template <> template <> template <> struct ColorLookup<rgb>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::B> { static constexpr unsigned char value = std::get<2>(yellow_rgb); };
-
-// === RGBA / Yellow / Channels ===
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::R> { static constexpr unsigned char value = std::get<0>(yellow_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::G> { static constexpr unsigned char value = std::get<1>(yellow_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::B> { static constexpr unsigned char value = std::get<2>(yellow_rgb); };
-template <> template <> template <> struct ColorLookup<rgba>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::A> { static constexpr unsigned char value = 255; };
-
-// === HSV / Yellow / Channels ===
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::H> { static constexpr float value = std::get<0>(yellow_hsv); };
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::S> { static constexpr float value = std::get<1>(yellow_hsv); };
-template <> template <> template <> struct ColorLookup<hsv>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::V> { static constexpr float value = std::get<2>(yellow_hsv); };
-
-// === HSVA / Yellow / Channels ===
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::H> { static constexpr float value = std::get<0>(yellow_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::S> { static constexpr float value = std::get<1>(yellow_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::V> { static constexpr float value = std::get<2>(yellow_hsv); };
-template <> template <> template <> struct ColorLookup<hsva>::Color<color_tag::Yellow>::ChannelConst<constants::color_channel::A> { static constexpr float value = 1.f; };
 
 }

@@ -4,28 +4,26 @@ module;
 
 export module ks.core.image.color_builder_impl:color_builder;
 
-import ks.core.image.color_tag;
 import ks.core.image.color_space;
 import ks.core.image.color_channel;
 import ks.core.image.pixel_impl;
 import ks.core.image.color_constant;
+import ks.core.constexpr_utils.string_literal;
 
 export namespace ks::core::image {
 
 template <color_model CM>
 struct color_builder {
-    template <color_tag CT>
+    template <string_literal CT>
     struct make {
         using pixel_t = pixel<CM>;
         template <typename... Args>
         static KS_CONSTEXPR pixel_t build(Args... args) KS_NOEXCEPT {
             if constexpr (pixel_t::traits::CHANNELS == 3) {
-                static_assert(sizeof...(Args) == 0,
-                              "RGB pixel does not accept extra arguments");
                 return pixel_t{
-                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_1>::value,
-                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_2>::value,
-                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_3>::value
+                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_1>::get_value(),
+                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_2>::get_value(),
+                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_3>::get_value()
                 };
             } else if constexpr (pixel_t::traits::CHANNELS == 4) {
                 static_assert(sizeof...(Args) <= 1,
@@ -35,9 +33,9 @@ struct color_builder {
                     alpha = (args, ...);
                 }
                 return pixel_t{
-                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_1>::value,
-                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_2>::value,
-                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_3>::value,
+                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_1>::get_value(),
+                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_2>::get_value(),
+                    ColorLookup<CM>::template Color<CT>::template ChannelConst<pixel_t::traits::color_channel_3>::get_value(),
                     alpha
                 };
             } else {

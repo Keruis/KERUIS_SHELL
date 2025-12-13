@@ -3,8 +3,8 @@
 #include <chrono>
 #include <thread>
 // import ks.core.math.vec.vector2;
-
-
+//
+//
 // int main() {
 //     using namespace ks::core::math::vec;
 //
@@ -78,66 +78,109 @@
 //     std::cout << "Test finished." << std::endl;
 //     return 0;
 // }
-// #include <windows.h>
-// import ks.core.render.input;
-// import ks.platform;
-//
-// LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-//     switch (uMsg) {
-//     case WM_DESTROY:
-//         PostQuitMessage(0);
-//         return 0;
-//     }
-//     return DefWindowProc(hwnd, uMsg, wParam, lParam);
-// }
-//
-// int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow) {
-//     WNDCLASS wc = {};
-//     wc.lpfnWndProc = WindowProc;
-//     wc.hInstance = hInstance;
-//     wc.lpszClassName = "test";
-//     RegisterClass(&wc);
-//
-//     HWND hwnd = CreateWindowEx(
-//         0,
-//         "test",
-//         "eee",
-//         WS_OVERLAPPEDWINDOW,
-//         CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
-//         nullptr, nullptr, hInstance, nullptr
-//     );
-//
-//     if (!hwnd) return 0;
-//
-//     ShowWindow(hwnd, nCmdShow);
-//
-//     ks::platform::win32::WindowWin32 window;
-//     window.Init(&hwnd);
-//     ks::platform::win32::CursorControllerWin32 cursor;
-//     cursor.Init(&hwnd);
-//
-//     ks::core::render::input::Mouse mouse(800, 600);
-//     mouse.BindWindow(&window);
-//     mouse.BindCursorController(&cursor);
-//
-//     MSG msg = {};
-//     while (true) {
-//         while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-//             if (msg.message == WM_QUIT) return 0;
-//             TranslateMessage(&msg);
-//             DispatchMessage(&msg);
-//         }
-//
-//
-//         mouse.frame();
-//
-//         std::cout << mouse.getPosition().x << ", " << mouse.getPosition().y << std::endl;
-//
-//         std::this_thread::sleep_for(std::chrono::milliseconds(16)); // 约60FPS
-//     }
-//
-//     return 0;
-// }
+#include <cmath>
+#include <chrono>
+#include <windows.h>
+import ks.core.render.input;
+import ks.platform;
+import kstd.image;
+
+static auto bgColor = ks::core::image::color<ks::core::image::rgb>::random(); //ks::core::image::color<ks::core::image::rgb>::build<"white">();
+
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    switch (uMsg) {
+
+    case WM_ERASEBKGND: {
+
+        return 1;
+    }
+
+    case WM_PAINT: {
+            PAINTSTRUCT ps;
+            HDC hdc = BeginPaint(hwnd, &ps);
+
+            RECT rc;
+            GetClientRect(hwnd, &rc);
+
+            HBRUSH brush = CreateSolidBrush(RGB(bgColor.r, bgColor.g, bgColor.b));
+            FillRect(hdc, &rc, brush);
+            DeleteObject(brush);
+
+            EndPaint(hwnd, &ps);
+            return 0;
+    }
+
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        return 0;
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow) {
+    WNDCLASS wc = {};
+    wc.lpfnWndProc = WindowProc;
+    wc.hInstance = hInstance;
+    wc.lpszClassName = "test";
+    RegisterClass(&wc);
+
+    HWND hwnd = CreateWindowEx(
+        0,
+        "test",
+        "eee",
+        WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
+        nullptr, nullptr, hInstance, nullptr
+    );
+
+    if (!hwnd) return 0;
+
+    ShowWindow(hwnd, nCmdShow);
+
+    // 你的输入模块
+    ks::platform::win32::WindowWin32 window;
+    window.Init(&hwnd);
+    ks::platform::win32::CursorControllerWin32 cursor;
+    cursor.Init(&hwnd);
+
+    ks::core::render::input::Mouse mouse(800, 600);
+    mouse.BindWindow(&window);
+    mouse.BindCursorController(&cursor);
+
+    MSG msg = {};
+    auto c1 = ks::core::image::color<ks::core::image::rgb>::build<"white">();
+    auto c2 = ks::core::image::color<ks::core::image::rgb>::random();//ks::core::image::color<ks::core::image::rgb>::build<"maroon">();
+
+    auto start = std::chrono::high_resolution_clock::now();
+
+    while (true) {
+        while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+            if (msg.message == WM_QUIT) return 0;
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+
+        // ---- 计算时间 ----
+        auto now = std::chrono::high_resolution_clock::now();
+        float t = std::chrono::duration<float>(now - start).count();
+
+        // t ∈ [0,1]
+        float lerp_t = (std::sin(t) + 1.f) * 0.5f;
+
+        // ---- 混合颜色 ----
+        auto mixed = ks::core::image::color<ks::core::image::rgb>::mix(c1, c2, lerp_t);
+
+        bgColor = mixed;
+
+        InvalidateRect(hwnd, nullptr, FALSE);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+    }
+
+    return 0;
+}
+
+
 
 // int main() {
 //     ks::platform::win32::CursorControllerWin32 cursor;
@@ -157,12 +200,12 @@
 //     std::cout << a.c_str() << std::endl;
 // }
 
-import kstd.image;
-
-int main() {
-
-    ks::core::image::pixel<ks::core::image::rgba> a(30, 30, 30);
-    std::cout << static_cast<int>(a.r) << std::endl;
-    auto w = ks::core::image::color<ks::core::image::hsva>::Red();
-    std::cout << static_cast<int>(w.h) << std::endl;
-}
+// import kstd.image;
+//
+// int main() {
+//
+//     ks::core::image::pixel<ks::core::image::rgba> a(30, 30, 30);
+//     std::cout << static_cast<int>(a.r) << std::endl;
+//     auto w = ks::core::image::color<ks::core::image::rgba>::build<"red">();
+//     std::cout << static_cast<int>(w.r) << " " << static_cast<int>(w.g) << " " << static_cast<int>(w.b) << std::endl;
+// }

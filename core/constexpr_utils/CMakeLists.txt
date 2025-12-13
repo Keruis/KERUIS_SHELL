@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 3.29)
 project(constexpr_utils_lib LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -12,6 +12,8 @@ target_sources(constexpr_utils_lib PUBLIC
 
         is_space.ixx
         string_literal.ixx
+        hash.ixx
+        compile_time_seed.ixx
 
         mod.constexpr_utils.ixx
 )

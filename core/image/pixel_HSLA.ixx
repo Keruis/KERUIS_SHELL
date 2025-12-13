@@ -2,22 +2,22 @@ module;
 
 #include "../utils/attributes.h"
 
-export module ks.core.image.pixel_impl:HSVA;
+export module ks.core.image.pixel_impl:HSLA;
 
 import :pixel_base;
 import ks.core.image.color_space;
 import ks.core.image.pixel_traits;
 
 template <>
-struct ks::core::image::pixel<ks::core::image::color_model::hsva> {
-    using traits = pixel_traits<hsva>;
+struct ks::core::image::pixel<ks::core::image::color_model::hsla> {
+    using traits = pixel_traits<hsla>;
     using value_t = traits::value_t;
 
     union {
         struct {
             value_t h;
             value_t s;
-            value_t v;
+            value_t l;
             value_t a;
         };
         struct {
@@ -28,12 +28,12 @@ struct ks::core::image::pixel<ks::core::image::color_model::hsva> {
         };
     };
 
-    KS_CONSTEXPR pixel() : h{traits::range<1, false>()}, s{traits::range<2, false>()}, v{traits::range<3, false>()}, a{traits::range<4, true>()} {}
-    KS_CONSTEXPR explicit pixel(const value_t h_, const value_t s_, const value_t v_, const value_t a_ = traits::range<4, true>())
-        : h(h_), s(s_), v(v_), a(a_) {}
+    KS_CONSTEXPR pixel() : h{traits::range<1, false>()}, s{traits::range<2, false>()}, l{traits::range<3, false>()}, a{traits::range<4, true>()} {}
+    KS_CONSTEXPR explicit pixel(const value_t h_, const value_t s_, const value_t l_, const value_t a_ = traits::range<4, true>())
+        : h(h_), s(s_), l(l_), a(a_) {}
 
     bool operator==(const pixel& rhs) KS_CONST {
-        return h == rhs.h && s == rhs.s && v == rhs.v && a == rhs.a;
+        return h == rhs.h && s == rhs.s && l == rhs.l && a == rhs.a;
     }
 
     bool operator!=(const pixel& rhs) KS_CONST {

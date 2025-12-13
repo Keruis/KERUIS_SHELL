@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 3.29)
 project(image_lib LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -15,7 +15,6 @@ target_sources(image_lib PUBLIC
 
         color_constant.ixx
         color_channel.ixx
-        color_tag.ixx
         color_space.ixx
         pixel_weights.ixx
 
@@ -25,9 +24,10 @@ target_sources(image_lib PUBLIC
         pixel_RGBA.ixx
         pixel_HSV.ixx
         pixel_HSVA.ixx
+        pixel_HSL.ixx
+        pixel_HSLA.ixx
         pixel_impl.ixx
 
-        color_tag.ixx
         color_builder/color_builder.ixx
         color_builder/color_builder_impl.ixx
 

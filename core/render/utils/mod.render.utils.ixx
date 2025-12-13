@@ -1,4 +1,4 @@
 export module ks.core.render.utils;
 
 export import :frameLimiter;
-export import :frameRateCounter;
+//export import :frameRateCounter;

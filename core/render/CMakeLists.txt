@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 3.29)
 project(render_lib LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -22,8 +22,8 @@ target_sources(render_lib PUBLIC
         utils/frameLimiter.ixx
         utils/frameLimiter_impl.cppm
 
-        utils/frameRateCounter.ixx
-        utils/frameRateCounter_impl.cppm
+        #utils/frameRateCounter.ixx
+        #utils/frameRateCounter_impl.cppm
 
         input/mouse/mouse.ixx
         input/mouse/mouse_impl.cppm

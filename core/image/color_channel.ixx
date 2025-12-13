@@ -8,7 +8,8 @@ enum class color_channel {
     A,
     H,
     S,
-    V
+    V,
+    L
 };
 
 }

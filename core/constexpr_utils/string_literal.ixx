@@ -5,11 +5,11 @@ module;
 
 export module ks.core.constexpr_utils.string_literal;
 
-template <std::size_t N>
+export template <std::size_t N>
 struct string_literal {
     char value[N]{};
 
-    explicit constexpr string_literal(char const (&str)[N]) {
+    constexpr string_literal(char const (&str)[N]) {
         std::copy_n(str, N, value);
     }
 
@@ -20,5 +20,5 @@ struct string_literal {
     }
 };
 
-template<std::size_t N>
+export template<std::size_t N>
 string_literal(char const (&)[N]) -> string_literal<N>;

@@ -5,3 +5,5 @@ export import :RGB;
 export import :RGBA;
 export import :HSV;
 export import :HSVA;
+export import :HSL;
+export import :HSLA;

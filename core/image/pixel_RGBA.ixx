@@ -14,15 +14,25 @@ struct ks::core::image::pixel<ks::core::image::color_model::rgba> {
     using traits = pixel_traits<rgba>;
     using value_t = traits::value_t;
 
-    value_t r{traits::MIN};
-    value_t g{traits::MIN};
-    value_t b{traits::MIN};
-    value_t a{traits::MAX};
+    union {
+        struct {
+            value_t r;
+            value_t g;
+            value_t b;
+            value_t a;
+        };
+        struct {
+            value_t c1;
+            value_t c2;
+            value_t c3;
+            value_t c4;
+        };
+    };
 
-    KS_CONSTEXPR pixel() = default;
-    KS_CONSTEXPR explicit pixel(const value_t c_, const value_t a_ = traits::MAX) KS_NOEXCEPT
+    KS_CONSTEXPR pixel() : r{traits::range<1, false>()}, g{traits::range<2, false>()}, b{traits::range<3, false>()}, a{traits::range<4, true>()} {}
+    KS_CONSTEXPR explicit pixel(const value_t c_, const value_t a_ = traits::range<4, true>()) KS_NOEXCEPT
         : r{c_}, g{c_}, b{c_}, a{a_} {}
-    KS_CONSTEXPR explicit pixel(const value_t r_, const value_t g_, const value_t b_, const value_t a_ = traits::MAX) KS_NOEXCEPT
+    KS_CONSTEXPR explicit pixel(const value_t r_, const value_t g_, const value_t b_, const value_t a_ = traits::range<4, true>()) KS_NOEXCEPT
         : r{r_}, g{g_}, b{b_}, a{a_} {}
 
     KS_CONSTEXPR bool operator==(const pixel& other) KS_CONST KS_NOEXCEPT {

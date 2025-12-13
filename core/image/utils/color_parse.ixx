@@ -3,6 +3,7 @@ module;
 #include <string_view>
 #include <array>
 
+
 export module ks.core.image.utils.color_parse;
 
 import kstd.constexpr_utils;
@@ -97,11 +98,16 @@ constexpr std::string_view color_definitions =
 
 export constexpr auto parsed_colors = ParseColors<color_definitions>();
 
-export constexpr const ColorData* get_color(std::string_view name) {
+export template <string_literal STR>
+constexpr const ColorData* get_color() {
     for (const auto& c : parsed_colors) {
-        if (c.name == name) return &c;
+        if (c.name == STR.value) return &c;
     }
     return nullptr;
+}
+
+export constexpr std::size_t get_color_size() {
+    return parsed_colors.size();
 }
 
 }
